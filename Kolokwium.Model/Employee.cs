@@ -14,7 +14,7 @@ namespace Kolokwium.Model
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string SurName { get; set; } = null!;
-        public DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
         public int YearsOfEmployment {  get; set; }
         [Hide]
         public Department Department { get; set; } = null!;

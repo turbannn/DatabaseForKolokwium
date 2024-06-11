@@ -25,7 +25,7 @@ namespace Kolokwium.WpfApp
     public partial class MainWindow : Window
     {
         private readonly ApplicationDbContext _dbContext;
-
+        private bool _isDepartments = true;
         public MainWindow(ApplicationDbContext dbContext)
         {
 
@@ -51,24 +51,44 @@ namespace Kolokwium.WpfApp
             dataGrid.AutoGenerateColumns = false;
             dataGrid.ItemsSource = list;
             dataGrid.Items.Refresh();
-        }
-        private void AddEditDepartmentClick(object sender, RoutedEventArgs e)
+        }//asdfasdf
+        private void AddEditDepartmentOrEmployeeClick(object sender, RoutedEventArgs e)
         {
-            if(DataGridDepartments.SelectedItem != null && DataGridDepartments.SelectedItem is Department d)
+            if(AddEditDepartmentButton.Content.ToString() == "Add Or Edit Department")
             {
-                AddEditDepartmentWindow addEditDepartmentWindow = new AddEditDepartmentWindow(_dbContext, d);
-                if (addEditDepartmentWindow.ShowDialog() ?? false)
-                    SetGrid(DataGridDepartments, _dbContext.departments.Include(d => d.Employees));
+                if (DataGridDepartments.SelectedItem != null &&
+                DataGridDepartments.SelectedItem is Department d)
+                {
+                    AddEditDepartmentWindow addEditDepartmentWindow = new AddEditDepartmentWindow(_dbContext, d);
+                    if (addEditDepartmentWindow.ShowDialog() ?? false)
+                        SetGrid(DataGridDepartments, _dbContext.departments.Include(d => d.Employees));
+                }
+                else
+                {
+                    AddEditDepartmentWindow addEditDepartmentWindow = new AddEditDepartmentWindow(_dbContext);
+                    if (addEditDepartmentWindow.ShowDialog() ?? false)
+                        SetGrid(DataGridDepartments, _dbContext.departments.Include(d => d.Employees));
+                }
             }
             else
             {
-                AddEditDepartmentWindow addEditDepartmentWindow = new AddEditDepartmentWindow(_dbContext);
-                if (addEditDepartmentWindow.ShowDialog() ?? false)
-                    SetGrid(DataGridDepartments, _dbContext.departments.Include(d => d.Employees));
+                if (DataGridDepartments.SelectedItem != null &&
+                DataGridDepartments.SelectedItem is Employee emp)
+                {
+                    AddEditEmployeeWindow addEditemployeeWindow = new AddEditEmployeeWindow(_dbContext, emp);
+                    if (addEditemployeeWindow.ShowDialog() ?? false)
+                        SetGrid(DataGridDepartments, _dbContext.employees.ToList());
+                }
+                else
+                {
+                    AddEditEmployeeWindow addEditemployeeWindow = new AddEditEmployeeWindow(_dbContext);
+                    if (addEditemployeeWindow.ShowDialog() ?? false)
+                        SetGrid(DataGridDepartments, _dbContext.employees.ToList());
+                }
             }
         }
 
-        private void DeleteEmployeeClick(object sender, RoutedEventArgs e)
+        private void MainDeleteClick(object sender, RoutedEventArgs e)
         {
             if(DataGridDepartments.SelectedItem != null && DataGridDepartments.SelectedItem is Department de)
             {
@@ -76,14 +96,29 @@ namespace Kolokwium.WpfApp
                 _dbContext.SaveChanges();
                 SetGrid(DataGridDepartments, _dbContext.departments.Include(e => e.Employees));
             }
-        }
-
-        private void DepartmentDetailsClick(object sender, RoutedEventArgs e)
-        {
-            if(DataGridDepartments.SelectedItem != null && DataGridDepartments.SelectedItem is Department de)
+            else if(DataGridDepartments.SelectedItem != null && DataGridDepartments.SelectedItem is Employee emp)
             {
-                DepartmentDetailsWindow depDetailsWindow = new DepartmentDetailsWindow(_dbContext, de);
-                depDetailsWindow.ShowDialog();
+                _dbContext.employees.Remove(emp);
+                _dbContext.SaveChanges();
+                SetGrid(DataGridDepartments, _dbContext.employees.ToList());
+            }
+        }
+        private void SeeAllEmployeesClick(object sender, RoutedEventArgs e)
+        {
+            _isDepartments = !_isDepartments;
+            if (_isDepartments)
+            {
+                SetGrid(DataGridDepartments, _dbContext.departments.Include(d => d.Employees));
+                AllEmployees.Content = "See All Employees";
+                AddEditDepartmentButton.Content = "Add Or Edit Department";
+                DeleteDepartmentButton.Content = "Delete Department";
+            }
+            else
+            {
+                SetGrid(DataGridDepartments, _dbContext.employees.ToList());
+                AllEmployees.Content = "See All Departments";
+                AddEditDepartmentButton.Content = "Add Or Edit Employee";
+                DeleteDepartmentButton.Content = "Delete Employee";
             }
         }
     }

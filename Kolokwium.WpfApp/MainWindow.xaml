@@ -17,9 +17,9 @@
                 <RowDefinition Height="2*"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <Button x:Name="AddEditDepartmentButton" Grid.Row="0" Grid.Column="0" FontSize="18" Click="AddEditDepartmentClick">Add Or Edit Department</Button>
-            <Button x:Name="DepartmentDetails" Grid.Row="0" Grid.Column="1" FontSize="18" Click="DepartmentDetailsClick">See Department Employees</Button>
-            <Button x:Name="DeleteEmployeeButton" Grid.Row="0" Grid.Column="2" FontSize="18" Click="DeleteEmployeeClick">Delete Employee</Button>
+            <Button x:Name="AddEditDepartmentButton" Grid.Row="0" Grid.Column="0" FontSize="18" Click="AddEditDepartmentOrEmployeeClick" Content="Add Or Edit Department"></Button>
+            <Button x:Name="AllEmployees" Grid.Row="0" Grid.Column="1" FontSize="18" Click="SeeAllEmployeesClick" Content="See All Employees"></Button>
+            <Button x:Name="DeleteDepartmentButton" Grid.Row="0" Grid.Column="2" FontSize="18" Click="MainDeleteClick" Content="Delete Department"></Button>
         </Grid>
         <Grid Margin="0,130,0,0">
             <DataGrid x:Name="DataGridDepartments" AutoGenerateColumns="False" DockPanel.Dock="Bottom" SelectionMode="Single"/>
